@@ -1,7 +1,7 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { UserProfile, GPSReport } from "@/types";
+import type { UserProfile, GPSReport, InterestTestResult, ChatMessage } from "@/types";
 
 interface QuizStore {
   step: number;
@@ -10,6 +10,8 @@ interface QuizStore {
   report: GPSReport | null;
   savedCareers: string[];
   compareList: string[];
+  interestTestResult: InterestTestResult | null;
+  chatMessages: ChatMessage[];
   setStep: (step: number) => void;
   nextStep: () => void;
   prevStep: () => void;
@@ -18,6 +20,9 @@ interface QuizStore {
   resetQuiz: () => void;
   toggleSaveCareer: (careerId: string) => void;
   toggleCompare: (careerId: string) => void;
+  setInterestTestResult: (result: InterestTestResult) => void;
+  addChatMessage: (msg: ChatMessage) => void;
+  clearChat: () => void;
 }
 
 const defaultProfile: Partial<UserProfile> = {
@@ -53,6 +58,8 @@ export const useQuizStore = create<QuizStore>()(
       report: null,
       savedCareers: [],
       compareList: [],
+      interestTestResult: null,
+      chatMessages: [],
 
       setStep: (step) => set({ step }),
       nextStep: () => set((s) => ({ step: Math.min(s.step + 1, s.totalSteps) })),
@@ -77,6 +84,9 @@ export const useQuizStore = create<QuizStore>()(
             ? [...s.compareList, careerId]
             : s.compareList,
         })),
+      setInterestTestResult: (result) => set({ interestTestResult: result }),
+      addChatMessage: (msg) => set((s) => ({ chatMessages: [...s.chatMessages.slice(-49), msg] })),
+      clearChat: () => set({ chatMessages: [] }),
     }),
     {
       name: "career-gps-store",
@@ -86,6 +96,8 @@ export const useQuizStore = create<QuizStore>()(
         savedCareers: state.savedCareers,
         compareList: state.compareList,
         step: state.step,
+        interestTestResult: state.interestTestResult,
+        chatMessages: state.chatMessages,
       }),
     }
   )

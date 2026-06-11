@@ -131,3 +131,29 @@ export interface GPSReport {
   ninetyDayPlan: string[];
   aiSummary?: string;
 }
+
+export interface InterestTestResult {
+  interestFit: number;
+  skillFit: number;
+  disciplineLevel: number;
+  careerScope: number;
+  creativePotential: number;
+  riskLevel: number;
+  streamAlignment: number;
+  summary: string;
+  completedAt: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: string;
+}
+
+export interface InterestTestQuestion {
+  id: string;
+  question: string;
+  options: { label: string; value: string }[];
+  type: "scenario" | "wouldYouRather" | "scale";
+}
