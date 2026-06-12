@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -44,7 +44,7 @@ const SERVICES: ServiceCard[] = [
   },
 ];
 
-export default function ConnectPage() {
+function ConnectContent() {
   const searchParams = useSearchParams();
   const [banner, setBanner] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [connected, setConnected] = useState<Record<string, boolean>>({});
@@ -206,5 +206,13 @@ export default function ConnectPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ConnectPage() {
+  return (
+    <Suspense>
+      <ConnectContent />
+    </Suspense>
   );
 }
