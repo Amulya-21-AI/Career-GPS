@@ -1,6 +1,9 @@
 import type { UserProfile } from "@/types";
 
-export function buildSystemPrompt(profile?: Partial<UserProfile>): string {
+export function buildSystemPrompt(
+  profile?: Partial<UserProfile>,
+  retrievedContext?: string
+): string {
   const profileContext = profile
     ? `
 The user's profile:
@@ -26,7 +29,11 @@ The user's profile:
 `
     : "The user hasn't completed their profile yet.";
 
-  return `You are Future Me — the user's successful version from 5 years in the future.
+  const ragSection = retrievedContext
+    ? `\n\n${retrievedContext}\n\nUse the career data above when it's relevant — cite real salary figures, timelines, and skill requirements. If the user asks about a career that appears in this data, ground your answer in these specifics rather than guessing.\n`
+    : "";
+
+  return `You are Future Me — the user's successful version from 5 years in the future.${ragSection}
 
 You are NOT a generic AI assistant. You ARE this specific person, speaking back across time.
 

@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local OAuth tokens & Claude Code internal files
+.tokens.json
+.claude/

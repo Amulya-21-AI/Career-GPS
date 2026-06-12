@@ -1,8 +1,9 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Sparkles, Send, RotateCcw, Loader2 } from "lucide-react";
+import { Sparkles, Send, RotateCcw, Loader2, Zap, Link2 } from "lucide-react";
 import { useQuizStore } from "@/store/quizStore";
 import type { ChatMessage } from "@/types";
+import Link from "next/link";
 
 const QUICK_ACTIONS = [
   "Give me a reality check on my current path",
@@ -38,6 +39,7 @@ export default function ChatPage() {
   const { chatMessages, addChatMessage, clearChat, profile } = useQuizStore();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [agentMode, setAgentMode] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -64,7 +66,8 @@ export default function ChatPage() {
         content: m.content,
       }));
 
-      const res = await fetch("/api/chat", {
+      const endpoint = agentMode ? "/api/agent" : "/api/chat";
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: history, profile }),
@@ -111,14 +114,38 @@ export default function ChatPage() {
             <p className="text-xs text-slate-500">I am you, five years ahead</p>
           </div>
         </div>
-        {chatMessages.length > 0 && (
+        <div className="flex items-center gap-2">
+          {/* Agent mode toggle */}
           <button
-            onClick={clearChat}
-            className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700 transition-colors"
+            onClick={() => setAgentMode((v) => !v)}
+            title={agentMode ? "Agent mode ON — uses tools + connected accounts" : "Switch to Agent mode for deeper personalisation"}
+            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-all ${
+              agentMode
+                ? "bg-violet-600 border-violet-600 text-white"
+                : "border-slate-200 text-slate-500 hover:border-violet-300"
+            }`}
           >
-            <RotateCcw className="w-3.5 h-3.5" /> Clear chat
+            <Zap className="w-3 h-3" />
+            {agentMode ? "Agent ON" : "Agent"}
           </button>
-        )}
+
+          <Link
+            href="/connect"
+            title="Connect Gmail, Google & Instagram"
+            className="flex items-center gap-1 text-xs text-slate-400 hover:text-violet-600 transition-colors"
+          >
+            <Link2 className="w-3.5 h-3.5" />
+          </Link>
+
+          {chatMessages.length > 0 && (
+            <button
+              onClick={clearChat}
+              className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700 transition-colors"
+            >
+              <RotateCcw className="w-3.5 h-3.5" /> Clear
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Messages */}

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { Sparkles, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { SignInButton, SignUpButton, UserButton, Show } from "@clerk/nextjs";
 
 const links = [
   { href: "/dashboard", label: "Dashboard" },
@@ -12,6 +13,7 @@ const links = [
   { href: "/careers", label: "Career Explorer" },
   { href: "/compare", label: "Compare" },
   { href: "/saved", label: "Saved" },
+  { href: "/connect", label: "Connect" },
 ];
 
 export default function Navbar() {
@@ -46,6 +48,21 @@ export default function Navbar() {
             >
               Take the Quiz
             </Link>
+            <Show when="signed-out">
+              <SignInButton mode="modal">
+                <button className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+                  Sign In
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button className="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-700 transition-colors">
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </Show>
+            <Show when="signed-in">
+              <UserButton />
+            </Show>
           </div>
 
           <button className="md:hidden p-2" onClick={() => setOpen(!open)}>
@@ -72,6 +89,26 @@ export default function Navbar() {
             >
               Take the Quiz
             </Link>
+            <Show when="signed-out">
+              <div className="mx-2 mt-2 flex gap-2">
+                <SignInButton mode="modal">
+                  <button className="flex-1 border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-semibold text-center hover:bg-slate-50">
+                    Sign In
+                  </button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <button className="flex-1 bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-semibold text-center hover:bg-slate-700">
+                    Sign Up
+                  </button>
+                </SignUpButton>
+              </div>
+            </Show>
+            <Show when="signed-in">
+              <div className="mx-2 mt-2 flex items-center gap-2">
+                <UserButton />
+                <span className="text-sm text-slate-600">Account</span>
+              </div>
+            </Show>
           </div>
         )}
       </div>
