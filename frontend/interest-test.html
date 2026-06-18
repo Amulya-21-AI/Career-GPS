@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interest Test — Career GPS</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="page">
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">🧭 Career <span>GPS</span></a>
+    <div class="navbar-links">
+      <a href="quiz.html">Quiz</a>
+      <a href="chat.html">Future Me</a>
+      <a href="report.html" class="btn btn-primary btn-sm" style="margin-left:8px;">My Report</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="container" style="max-width:680px;">
+
+      <!-- Header -->
+      <div class="mb-32">
+        <div class="hero-eyebrow" style="margin-bottom:12px;">8 Questions · ~5 Minutes</div>
+        <h2>Interest Test</h2>
+        <p class="text-muted mt-8">Scenario-based questions scored by AI across 7 career dimensions. No right or wrong answers.</p>
+      </div>
+
+      <!-- Progress -->
+      <div class="mb-24 hidden" id="test-progress">
+        <div class="flex justify-between mb-8">
+          <span class="text-sm text-muted" id="q-counter">Question 1 of 8</span>
+          <span class="text-sm" id="q-pct" style="color:var(--primary); font-weight:700;">0%</span>
+        </div>
+        <div class="progress"><div class="progress-fill" id="q-bar" style="width:0%"></div></div>
+      </div>
+
+      <!-- Questions -->
+      <div id="questions-area"></div>
+
+      <!-- Submit -->
+      <div id="submit-area" class="mt-24 hidden">
+        <div class="card mb-16" style="background:var(--green-dim); border-color:var(--green);">
+          <div class="flex gap-12 items-center">
+            <span style="font-size:24px;">✅</span>
+            <div>
+              <div style="font-weight:700; color:var(--green);">All questions answered!</div>
+              <div class="text-sm text-muted">Click below to get your AI-scored results.</div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-lg w-full" onclick="submitTest()" id="submit-btn">
+          Get My Interest Scores →
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div id="loading" class="card loading-card hidden">
+        <div class="spinner"></div>
+        <p>AI is analysing your answers…</p>
+      </div>
+
+      <!-- Results -->
+      <div id="results" class="hidden">
+        <div class="section-title mt-48">Your Interest Profile</div>
+        <div class="score-grid" id="score-grid"></div>
+
+        <div class="card mt-16 card-glow-blue" style="border-color:var(--purple-dim);">
+          <div class="flex gap-12 items-center mb-12">
+            <span style="font-size:24px;">🤖</span>
+            <h3 class="text-purple">AI Insight — From Your Future Self</h3>
+          </div>
+          <p id="summary-text" style="line-height:1.8; color:var(--text);"></p>
+        </div>
+
+        <div class="flex gap-12 mt-24 flex-wrap">
+          <a href="report.html" class="btn btn-green btn-lg">View Full GPS Report →</a>
+          <a href="chat.html" class="btn btn-outline">Chat with Future Me</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const QUESTIONS = [
+      { id: "q1", text: "You have a free weekend and a laptop. What do you naturally gravitate towards?", options: ["Build or code something", "Design or create visual content", "Read about markets or business", "Help or connect with people", "Research a topic I'm curious about"] },
+      { id: "q2", text: "Your friend has a startup idea. What's your first instinct?", options: ["Help them build the product or tech", "Create the brand and visual identity", "Analyse if it's financially viable", "Connect them with the right people", "Research the market and competitors"] },
+      { id: "q3", text: "Which of these problems excites you most to solve?", options: ["Making software faster and smarter", "Making interfaces beautiful and intuitive", "Making money work more efficiently", "Making people's lives meaningfully better", "Making sense of complex information"] },
+      { id: "q4", text: "You're given 6 months and ₹50,000 to learn anything. What do you do?", options: ["Learn AI, coding, or data science", "Learn design, video, or content creation", "Learn finance, investing, or business strategy", "Learn teaching, counselling, or leadership", "Learn research, writing, or analytics"] },
+      { id: "q5", text: "Which work environment sounds most like you?", options: ["Startup solving hard technical problems", "Creative agency or design studio", "Bank, consulting, or finance firm", "NGO, hospital, or education organisation", "Research lab or analytics team"] },
+      { id: "q6", text: "If you had to pick one skill to master this year, it would be:", options: ["Programming or machine learning", "UI/UX design or video production", "Financial modelling or product strategy", "Leadership or community building", "Data analysis or research writing"] },
+      { id: "q7", text: "Which statement best describes how you think?", options: ["I like building systems and solving logic problems", "I see patterns in aesthetics and storytelling", "I think in terms of numbers, risk, and returns", "I understand people and social dynamics deeply", "I synthesise information into clear insights"] },
+      { id: "q8", text: "Five years from now, your proudest achievement would be:", options: ["A product millions of people use daily", "A creative work that genuinely moved people", "A business or fund I built from scratch", "A community or cause I helped grow", "A body of research or writing that matters"] },
+    ];
+
+    const answers = {};
+    let answeredCount = 0;
+
+    function updateProgress() {
+      const pct = Math.round((answeredCount / QUESTIONS.length) * 100);
+      document.getElementById("q-bar").style.width = pct + "%";
+      document.getElementById("q-pct").textContent = pct + "%";
+      document.getElementById("q-counter").textContent = `${answeredCount} of ${QUESTIONS.length} answered`;
+      if (answeredCount === QUESTIONS.length) {
+        document.getElementById("submit-area").classList.remove("hidden");
+      }
+    }
+
+    function renderQuestions() {
+      document.getElementById("test-progress").classList.remove("hidden");
+      const area = document.getElementById("questions-area");
+      area.innerHTML = QUESTIONS.map((q, i) => `
+        <div class="card mb-16" id="qcard-${q.id}">
+          <div class="flex gap-12 mb-16 items-center">
+            <span class="badge badge-blue">${i + 1}</span>
+            <p style="font-weight:600; font-size:15px; line-height:1.5;">${q.text}</p>
+          </div>
+          <div>
+            ${q.options.map(opt => `
+              <label class="option-label" id="opt-${q.id}-${opt.slice(0,10).replace(/\s/g,'_')}">
+                <input type="radio" name="${q.id}" value="${opt}"
+                  onchange="selectOption(this, '${q.text}', '${opt.replace(/'/g,"\\'")}', '${q.id}')" />
+                <div class="option-dot"></div>
+                <span>${opt}</span>
+              </label>
+            `).join("")}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function selectOption(input, question, value, qid) {
+      if (!answers[question]) answeredCount++;
+      answers[question] = value;
+      // Update visual state
+      document.querySelectorAll(`input[name="${qid}"]`).forEach(r => {
+        r.closest(".option-label").classList.remove("selected");
+      });
+      input.closest(".option-label").classList.add("selected");
+      updateProgress();
+    }
+
+    async function submitTest() {
+      document.getElementById("submit-btn").disabled = true;
+      document.getElementById("submit-area").classList.add("hidden");
+      document.getElementById("loading").classList.remove("hidden");
+
+      const profile = JSON.parse(localStorage.getItem("careerGpsProfile") || "null");
+
+      try {
+        const res = await fetch("http://localhost:8000/api/interest-test", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ answers, profile }),
+        });
+        const data = await res.json();
+
+        document.getElementById("loading").classList.add("hidden");
+        document.getElementById("results").classList.remove("hidden");
+
+        const dims = [
+          { key: "interestFit",       label: "Interest Fit",  icon: "❤️" },
+          { key: "skillFit",          label: "Skill Fit",     icon: "🛠" },
+          { key: "disciplineLevel",   label: "Discipline",    icon: "💪" },
+          { key: "careerScope",       label: "Career Scope",  icon: "🌐" },
+          { key: "creativePotential", label: "Creativity",    icon: "🎨" },
+          { key: "riskLevel",         label: "Risk Level",    icon: "⚡" },
+          { key: "streamAlignment",   label: "Stream Fit",    icon: "🎯" },
+        ];
+
+        document.getElementById("score-grid").innerHTML = dims.map(d => {
+          const v = data[d.key] || 0;
+          const color = v >= 7 ? "var(--green)" : v >= 5 ? "var(--yellow)" : "var(--red)";
+          return `<div class="score-cell">
+            <div style="font-size:20px; margin-bottom:8px;">${d.icon}</div>
+            <div class="score-num" style="color:${color}">${v}<span style="font-size:14px; color:var(--muted);">/10</span></div>
+            <div class="text-sm text-muted mt-4">${d.label}</div>
+            <div class="stat-bar mt-8">
+              <div class="stat-bar-fill" style="width:${v*10}%; background:${color};"></div>
+            </div>
+          </div>`;
+        }).join("");
+
+        document.getElementById("summary-text").textContent = data.summary || "Your results are ready above.";
+        document.getElementById("results").scrollIntoView({ behavior: "smooth" });
+
+      } catch (e) {
+        document.getElementById("loading").innerHTML =
+          `<p class="text-muted">⚠️ Could not reach backend. Is the Python server running on port 8000?</p>`;
+        document.getElementById("loading").style.padding = "32px";
+      }
+    }
+
+    renderQuestions();
+  </script>
+</body>
+</html>

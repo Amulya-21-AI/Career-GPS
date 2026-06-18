@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My GPS Report — Career GPS</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="page">
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">🧭 Career <span>GPS</span></a>
+    <div class="navbar-links">
+      <a href="quiz.html">Quiz</a>
+      <a href="chat.html">Future Me</a>
+      <a href="interest-test.html">Interest Test</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="container">
+
+      <!-- No profile -->
+      <div id="no-profile" class="card loading-card" style="margin:0 auto; max-width:480px;">
+        <span style="font-size:48px;">🧭</span>
+        <h2>No profile yet</h2>
+        <p class="text-muted" style="text-align:center;">Complete the 5-minute quiz first to generate your personalised GPS report.</p>
+        <a href="quiz.html" class="btn btn-primary btn-lg">Take the Career Quiz →</a>
+      </div>
+
+      <!-- Loading -->
+      <div id="loading-area" class="card loading-card hidden" style="margin:0 auto; max-width:480px;">
+        <div class="spinner"></div>
+        <p>Generating your personalised GPS report…</p>
+        <p class="text-muted text-sm">Scoring 60+ careers across 10 dimensions</p>
+      </div>
+
+      <!-- Report -->
+      <div id="report-area" class="hidden">
+
+        <!-- Report header -->
+        <div class="flex justify-between items-center mb-32" style="flex-wrap:wrap; gap:16px;">
+          <div>
+            <div class="hero-eyebrow" style="margin-bottom:8px;">Career GPS Report</div>
+            <h1 id="report-name" style="font-size:32px;">Your Report</h1>
+            <p class="text-muted text-sm mt-4" id="report-date"></p>
+          </div>
+          <a href="chat.html" class="btn btn-primary">Chat with Future Me →</a>
+        </div>
+
+        <!-- AI Summary -->
+        <div class="card card-glow-blue mb-24" style="border-color:var(--purple-dim);">
+          <div class="flex gap-12 items-center mb-12">
+            <span style="font-size:28px;">🤖</span>
+            <div>
+              <h3 class="text-purple">AI Summary — From Your Future Self</h3>
+              <p class="text-muted text-sm mt-4">Personalised insight based on your profile and top matches</p>
+            </div>
+          </div>
+          <p id="ai-summary-text" style="line-height:1.9; font-size:15px;"></p>
+        </div>
+
+        <!-- Strengths & Gaps -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px;">
+          <div class="card">
+            <div class="flex gap-8 items-center mb-16">
+              <span style="font-size:20px;">✅</span>
+              <h3 class="text-green">Your Strengths</h3>
+            </div>
+            <ul id="strengths-list" style="list-style:none; display:flex; flex-direction:column; gap:10px;"></ul>
+          </div>
+          <div class="card">
+            <div class="flex gap-8 items-center mb-16">
+              <span style="font-size:20px;">⚠️</span>
+              <h3 class="text-yellow">Skills to Build</h3>
+            </div>
+            <ul id="gaps-list" style="list-style:none; display:flex; flex-direction:column; gap:10px;"></ul>
+          </div>
+        </div>
+
+        <!-- Top Matches -->
+        <div class="section-title mt-32">Top Career Matches</div>
+        <div id="top-matches"></div>
+
+        <!-- Safe / Wildcard / Stretch -->
+        <div class="section-title mt-32">More Match Categories</div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+          <div>
+            <div class="badge badge-blue mb-12">🛡 Safe Picks</div>
+            <div id="safe-matches"></div>
+          </div>
+          <div>
+            <div class="badge badge-purple mb-12">🃏 Wildcards</div>
+            <div id="wildcard-matches"></div>
+          </div>
+          <div>
+            <div class="badge badge-yellow mb-12">🚀 Stretch Goals</div>
+            <div id="stretch-matches"></div>
+          </div>
+        </div>
+
+        <!-- Action Plan -->
+        <div class="section-title mt-48">Your Action Plan</div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+          <div class="card" style="border-top:3px solid var(--green);">
+            <h3 class="text-green mb-16">Next 7 Days</h3>
+            <ol id="plan-7" style="padding-left:18px; display:flex; flex-direction:column; gap:8px; font-size:13px; line-height:1.6;"></ol>
+          </div>
+          <div class="card" style="border-top:3px solid var(--primary);">
+            <h3 class="text-primary mb-16">Next 30 Days</h3>
+            <ol id="plan-30" style="padding-left:18px; display:flex; flex-direction:column; gap:8px; font-size:13px; line-height:1.6;"></ol>
+          </div>
+          <div class="card" style="border-top:3px solid var(--yellow);">
+            <h3 class="text-yellow mb-16">Next 90 Days</h3>
+            <ol id="plan-90" style="padding-left:18px; display:flex; flex-direction:column; gap:8px; font-size:13px; line-height:1.6;"></ol>
+          </div>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="cta-banner">
+          <h2>Want deeper guidance?</h2>
+          <p>Talk to your AI future self — ask about any career, skill gap, or decision.</p>
+          <a href="chat.html" class="btn btn-primary btn-lg">Chat with Future Me →</a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function scoreColor(n) {
+      if (n >= 75) return "var(--green)";
+      if (n >= 55) return "var(--yellow)";
+      return "var(--red)";
+    }
+
+    function matchCard(m) {
+      const color = scoreColor(m.matchScore);
+      return `
+        <div class="match-card">
+          <div class="flex gap-16 mb-16" style="flex-wrap:wrap;">
+            <div class="match-score-ring" style="background:${color}22; color:${color}; border:2px solid ${color};">
+              ${m.matchScore}%
+            </div>
+            <div style="flex:1;">
+              <h3>${m.career.title}</h3>
+              <div class="flex gap-8 mt-4 flex-wrap">
+                <span class="badge badge-blue">${m.career.category}</span>
+                <span class="badge ${m.career.type === 'emerging' ? 'badge-green' : m.career.type === 'unconventional' ? 'badge-purple' : 'badge-blue'}">${m.career.type}</span>
+              </div>
+              <p class="text-muted text-sm mt-8">${m.career.description}</p>
+            </div>
+          </div>
+
+          <div class="score-grid" style="grid-template-columns:repeat(4,1fr);">
+            ${[
+              {label:'Interest', val:m.interestFit},
+              {label:'Skills',   val:m.skillFit},
+              {label:'Education',val:m.educationFit},
+              {label:'Work Style',val:m.workStyleFit},
+            ].map(s => `
+              <div class="score-cell" style="padding:12px 10px;">
+                <div class="score-num" style="font-size:22px; color:${scoreColor(s.val)}">${s.val}</div>
+                <div class="text-xs text-muted mt-4">${s.label}</div>
+                <div class="stat-bar mt-6"><div class="stat-bar-fill" style="width:${s.val}%; background:${scoreColor(s.val)};"></div></div>
+              </div>`).join("")}
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+            <div>
+              <div class="text-xs text-muted mb-8" style="text-transform:uppercase; letter-spacing:.5px;">Why it fits</div>
+              ${m.whyMatches.map(w => `<div class="text-sm mb-4">✅ ${w}</div>`).join("")}
+            </div>
+            <div>
+              <div class="text-xs text-muted mb-8" style="text-transform:uppercase; letter-spacing:.5px;">Watch out for</div>
+              ${m.concerns.map(c => `<div class="text-sm mb-4">⚠️ ${c}</div>`).join("")}
+            </div>
+          </div>
+
+          <div class="flex gap-16 mt-16 flex-wrap" style="padding-top:16px; border-top:1px solid var(--border); font-size:13px; color:var(--muted);">
+            <span>💰 Entry: <strong style="color:var(--text)">${m.career.salaryRangeEntry}</strong></span>
+            <span>📈 Mid: <strong style="color:var(--text)">${m.career.salaryRangeMid}</strong></span>
+            <span>🕐 <strong style="color:var(--text)">~${m.career.timelineMonths} months</strong> to job-ready</span>
+            <span>📡 Demand: <strong style="color:var(--text)">${m.career.demandScore}/10</strong></span>
+            <span>🏠 Remote: <strong style="color:var(--text)">${m.career.remoteFriendlyScore}/10</strong></span>
+          </div>
+        </div>`;
+    }
+
+    function miniCard(m) {
+      return `
+        <div class="card mb-8" style="padding:14px 16px;">
+          <div class="flex justify-between items-center">
+            <span style="font-size:14px; font-weight:600;">${m.career.title}</span>
+            <span style="color:${scoreColor(m.matchScore)}; font-weight:800;">${m.matchScore}%</span>
+          </div>
+          <div class="text-sm text-muted mt-4">${m.career.salaryRangeEntry} entry · ${m.career.timelineMonths}mo</div>
+        </div>`;
+    }
+
+    async function loadReport() {
+      const profile = JSON.parse(localStorage.getItem("careerGpsProfile") || "null");
+      if (!profile) { document.getElementById("no-profile").classList.remove("hidden"); return; }
+
+      document.getElementById("no-profile").classList.add("hidden");
+      document.getElementById("loading-area").classList.remove("hidden");
+
+      try {
+        const res = await fetch("http://localhost:8000/api/report", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ profile }),
+        });
+        const data = await res.json();
+
+        document.getElementById("loading-area").classList.add("hidden");
+        document.getElementById("report-area").classList.remove("hidden");
+
+        document.getElementById("report-name").textContent = `${profile.name || "Your"}'s Career GPS Report`;
+        document.getElementById("report-date").textContent = `Generated ${new Date(data.generatedAt).toLocaleString()}`;
+        document.getElementById("ai-summary-text").textContent = data.aiSummary || "Add your ANTHROPIC_API_KEY to get an AI-written summary.";
+
+        document.getElementById("strengths-list").innerHTML = data.strengthsDetected.map(s =>
+          `<li class="flex gap-8 items-center text-sm"><span style="color:var(--green);">●</span>${s}</li>`
+        ).join("");
+
+        document.getElementById("gaps-list").innerHTML = (data.overallGaps.length ? data.overallGaps : ["No major gaps detected"]).map(g =>
+          `<li class="flex gap-8 items-center text-sm"><span style="color:var(--yellow);">●</span>${g}</li>`
+        ).join("");
+
+        document.getElementById("top-matches").innerHTML = data.topMatches.map(matchCard).join("");
+        document.getElementById("safe-matches").innerHTML     = data.safeMatches.map(miniCard).join("") || `<p class="text-muted text-sm">None found</p>`;
+        document.getElementById("wildcard-matches").innerHTML = data.wildcardMatches.map(miniCard).join("") || `<p class="text-muted text-sm">None found</p>`;
+        document.getElementById("stretch-matches").innerHTML  = data.stretchMatches.map(miniCard).join("") || `<p class="text-muted text-sm">None found</p>`;
+
+        document.getElementById("plan-7").innerHTML  = data.sevenDayPlan.map(i  => `<li>${i}</li>`).join("");
+        document.getElementById("plan-30").innerHTML = data.thirtyDayPlan.map(i => `<li>${i}</li>`).join("");
+        document.getElementById("plan-90").innerHTML = data.ninetyDayPlan.map(i => `<li>${i}</li>`).join("");
+
+      } catch (e) {
+        document.getElementById("loading-area").innerHTML =
+          `<p class="text-muted" style="padding:32px; text-align:center;">⚠️ Could not reach backend. Is the Python server running on port 8000?</p>`;
+      }
+    }
+
+    loadReport();
+  </script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Quiz — Career GPS</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="page">
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">🧭 Career <span>GPS</span></a>
+    <div class="navbar-links">
+      <a href="chat.html">Future Me</a>
+      <a href="interest-test.html">Interest Test</a>
+      <a href="report.html">My Report</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="container" style="max-width:640px;">
+
+      <!-- Progress Header -->
+      <div class="mb-24">
+        <div class="flex justify-between items-center mb-8">
+          <span class="text-sm text-muted" id="step-label">Step 1 of 6</span>
+          <span class="text-sm" id="step-pct" style="color:var(--primary); font-weight:700;">0%</span>
+        </div>
+        <div class="progress"><div class="progress-fill" id="progress-bar" style="width:0%"></div></div>
+        <div class="flex gap-6 mt-12" id="step-dots" style="justify-content:center;">
+          <!-- dots injected by JS -->
+        </div>
+      </div>
+
+      <!-- ── STEP 1: Personal ── -->
+      <div id="step-1">
+        <div class="step-header">
+          <div class="hero-eyebrow" style="margin-bottom:12px;">Step 1</div>
+          <h2>Who are you right now?</h2>
+          <p>Let's start with the basics so we can personalise your results.</p>
+        </div>
+        <div class="card">
+          <div class="form-group">
+            <label class="form-label">Your name</label>
+            <input class="form-input" id="name" placeholder="e.g. Amulya" />
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label class="form-label">Age range</label>
+              <select class="form-select" id="ageRange">
+                <option value="">Select…</option>
+                <option>16-18</option><option>18-21</option><option>21-24</option>
+                <option>24-28</option><option>28+</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Current stage</label>
+              <select class="form-select" id="stage">
+                <option value="after12th">After 12th</option>
+                <option value="college">In College</option>
+                <option value="freshGrad">Fresh Graduate</option>
+                <option value="professional">Working Professional</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 2: Education ── -->
+      <div id="step-2" class="hidden">
+        <div class="step-header">
+          <div class="hero-eyebrow" style="margin-bottom:12px;">Step 2</div>
+          <h2>Your Education</h2>
+          <p>Your background helps us find careers that match your existing foundation.</p>
+        </div>
+        <div class="card">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label class="form-label">Education stream</label>
+              <select class="form-select" id="educationStream">
+                <option value="">Select…</option>
+                <option>science</option><option>commerce</option><option>arts</option>
+                <option>engineering</option><option>medicine</option>
+                <option>computer science</option><option>management</option>
+                <option>design</option><option>law</option><option>social_work</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Degree</label>
+              <input class="form-input" id="degree" placeholder="e.g. B.Tech, BCA" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subjects studied <span class="text-muted2">(comma-separated)</span></label>
+            <input class="form-input" id="subjects" placeholder="e.g. mathematics, physics, python" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: Skills & Interests ── -->
+      <div id="step-3" class="hidden">
+        <div class="step-header">
+          <div class="hero-eyebrow" style="margin-bottom:12px;">Step 3</div>
+          <h2>Skills & Interests</h2>
+          <p>The more honest you are here, the more accurate your matches will be.</p>
+        </div>
+        <div class="card">
+          <div class="form-group">
+            <label class="form-label">Current skills <span class="text-muted2">(comma-separated)</span></label>
+            <input class="form-input" id="currentSkills" placeholder="e.g. python, excel, communication, figma" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Interests <span class="text-muted2">(comma-separated)</span></label>
+            <input class="form-input" id="interests" placeholder="e.g. coding, design, data, finance, writing" />
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label class="form-label">Work style</label>
+              <input class="form-input" id="workStyle" placeholder="e.g. remote, collaborative" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Values</label>
+              <input class="form-input" id="values" placeholder="e.g. learning, impact, creativity" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 4: Comfort Levels ── -->
+      <div id="step-4" class="hidden">
+        <div class="step-header">
+          <div class="hero-eyebrow" style="margin-bottom:12px;">Step 4</div>
+          <h2>Comfort Levels</h2>
+          <p>Rate yourself honestly — this calibrates your career difficulty fit.</p>
+        </div>
+        <div class="card" style="display:flex; flex-direction:column; gap:24px;">
+          <div>
+            <div class="flex justify-between mb-8">
+              <label class="form-label" style="margin:0;">💻 Tech / coding comfort</label>
+              <span id="tech-val" style="color:var(--primary); font-weight:700; font-size:18px;">5</span>
+            </div>
+            <input type="range" min="1" max="10" value="5" id="techComfort"
+              oninput="document.getElementById('tech-val').textContent=this.value" />
+            <div class="flex justify-between" style="font-size:11px; color:var(--muted2); margin-top:4px;">
+              <span>Avoid tech</span><span>Love building things</span>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-8">
+              <label class="form-label" style="margin:0;">🤝 People / communication</label>
+              <span id="people-val" style="color:var(--primary); font-weight:700; font-size:18px;">5</span>
+            </div>
+            <input type="range" min="1" max="10" value="5" id="peopleComfort"
+              oninput="document.getElementById('people-val').textContent=this.value" />
+            <div class="flex justify-between" style="font-size:11px; color:var(--muted2); margin-top:4px;">
+              <span>Prefer solo work</span><span>Love leading teams</span>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-8">
+              <label class="form-label" style="margin:0;">🎨 Creative thinking</label>
+              <span id="creative-val" style="color:var(--primary); font-weight:700; font-size:18px;">5</span>
+            </div>
+            <input type="range" min="1" max="10" value="5" id="creativeComfort"
+              oninput="document.getElementById('creative-val').textContent=this.value" />
+          </div>
+          <div>
+            <div class="flex justify-between mb-8">
+              <label class="form-label" style="margin:0;">📐 Analytical / logical</label>
+              <span id="analytical-val" style="color:var(--primary); font-weight:700; font-size:18px;">5</span>
+            </div>
+            <input type="range" min="1" max="10" value="5" id="analyticalComfort"
+              oninput="document.getElementById('analytical-val').textContent=this.value" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 5: Goals ── -->
+      <div id="step-5" class="hidden">
+        <div class="step-header">
+          <div class="hero-eyebrow" style="margin-bottom:12px;">Step 5</div>
+          <h2>Goals & Preferences</h2>
+          <p>Be honest — this affects which careers are realistically matched for you.</p>
+        </div>
+        <div class="card">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label class="form-label">Risk tolerance</label>
+              <select class="form-select" id="riskTolerance">
+                <option value="low">Low — I want stability</option>
+                <option value="medium" selected>Medium — balanced</option>
+                <option value="high">High — okay with uncertainty</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Timeline to first job</label>
+              <select class="form-select" id="timeline">
+                <option value="asap">ASAP</option>
+                <option value="3months">3 months</option>
+                <option value="6months">6 months</option>
+                <option value="1year">1 year</option>
+                <option value="2years">2 years</option>
+                <option value="flexible">Flexible</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Desired income range</label>
+            <select class="form-select" id="desiredIncome">
+              <option value="">Select…</option>
+              <option>₹3–5 LPA</option><option>₹5–8 LPA</option>
+              <option>₹8–12 LPA</option><option>₹12–20 LPA</option><option>₹20+ LPA</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 6: Career Preferences ── -->
+      <div id="step-6" class="hidden">
+        <div class="step-header">
+          <div class="hero-eyebrow" style="margin-bottom:12px;">Step 6</div>
+          <h2>Career Preferences</h2>
+          <p>Tell us what you've already considered — we'll use this to fine-tune your matches.</p>
+        </div>
+        <div class="card">
+          <div class="form-group">
+            <label class="form-label">Careers you've considered <span class="text-muted2">(comma-separated)</span></label>
+            <input class="form-input" id="careersConsidered" placeholder="e.g. data scientist, product manager, UX designer" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Careers you want to avoid <span class="text-muted2">(comma-separated)</span></label>
+            <input class="form-input" id="careersAvoided" placeholder="e.g. sales, teaching" />
+          </div>
+          <div class="card mt-16" style="background:var(--bg); border-color:var(--primary-dim);">
+            <div class="flex gap-12 items-center">
+              <span style="font-size:24px;">🎯</span>
+              <div>
+                <div style="font-weight:700; font-size:14px;">You're almost there!</div>
+                <div class="text-muted text-sm">Click Generate to run the ML scoring across 60+ careers.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="flex mt-24" style="justify-content:space-between; align-items:center;">
+        <button class="btn btn-outline" id="btn-back" onclick="prevStep()" style="visibility:hidden">← Back</button>
+        <button class="btn btn-primary" id="btn-next" onclick="nextStep()">Next →</button>
+      </div>
+
+      <!-- Result -->
+      <div id="result-area" class="hidden mt-32"></div>
+
+    </div>
+  </main>
+
+  <script src="js/quiz.js"></script>
+</body>
+</html>

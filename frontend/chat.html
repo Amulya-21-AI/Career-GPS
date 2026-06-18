@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Future Me — Career GPS</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="page">
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">🧭 Career <span>GPS</span></a>
+    <div class="navbar-links">
+      <a href="quiz.html">Quiz</a>
+      <a href="interest-test.html">Interest Test</a>
+      <a href="report.html" class="btn btn-primary btn-sm" style="margin-left:8px;">My Report</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="container" style="max-width:760px;">
+
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-24" style="flex-wrap:wrap; gap:12px;">
+        <div>
+          <div class="hero-eyebrow" style="margin-bottom:8px;">AI Chat</div>
+          <h2>Chat with Future You</h2>
+          <p class="text-muted text-sm mt-4">Your AI self from 5 years ahead — grounded in real career data, brutally honest.</p>
+        </div>
+        <div id="profile-chip" class="hidden">
+          <div class="card" style="padding:10px 16px; background:var(--green-dim); border-color:var(--green);">
+            <div class="text-sm" style="color:var(--green); font-weight:600;" id="profile-name-chip">Profile loaded ✓</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat window -->
+      <div class="chat-window" id="chat-window">
+        <div class="msg msg-assistant">
+          <strong>Hey. I'm you — five years from now.</strong><br><br>
+          I already made the mistakes you're about to make. Ask me anything about your career,
+          your path, what to build first, or whether your current plan actually works.<br><br>
+          <span style="color:var(--muted); font-size:13px;">Tip: Complete the quiz first so I know your background.</span>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="chat-input-row mt-16">
+        <input class="form-input" id="chat-input"
+          placeholder="Ask your future self anything…"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}" />
+        <button class="btn btn-primary" onclick="sendMessage()" id="send-btn" style="padding:10px 20px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          Send
+        </button>
+      </div>
+
+      <!-- Suggested prompts -->
+      <div class="section-title mt-24">Suggested questions</div>
+      <div class="flex flex-wrap gap-8">
+        <button class="btn btn-ghost btn-sm" onclick="ask('Give me a detailed roadmap for the next year')">📅 Year Roadmap</button>
+        <button class="btn btn-ghost btn-sm" onclick="ask('What skills should I build first based on my profile?')">🛠 Skills to Build</button>
+        <button class="btn btn-ghost btn-sm" onclick="ask('Is my current education path worth it?')">🧭 Is My Path Right?</button>
+        <button class="btn btn-ghost btn-sm" onclick="ask('What were your biggest career mistakes?')">⚠️ Past Mistakes</button>
+        <button class="btn btn-ghost btn-sm" onclick="ask('How do I get my first job faster?')">🚀 First Job Faster</button>
+        <button class="btn btn-ghost btn-sm" onclick="ask('Should I do a Masters degree or start working?')">🎓 Masters vs Job</button>
+        <button class="btn btn-ghost btn-sm" onclick="ask('What side projects should I build right now?')">💡 Side Projects</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/chat.js"></script>
+</body>
+</html>
